@@ -1,0 +1,20 @@
+{% extends 'store/base.html' %}
+
+{% block content %}
+<h2>Search Results for "{{ query }}"</h2>
+<div class="row">
+    {% for product in products %}
+        <div class="col-md-4">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5>{{ product.title }}</h5>
+                    <p>{{ product.description|truncatewords:15 }}</p>
+                    <a href="{% url 'store:product_detail' product.pk %}" class="btn btn-sm btn-primary">View Product</a>
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <p>No products found matching your query.</p>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,113 @@
+{% extends 'store/base.html' %}
+
+{% block content %}
+<div class="container my-4">
+  <div class="row">
+    
+    <!-- ক্যাটাগরি সাইডবার -->
+    <div class="col-md-3 mb-4">
+      <h5 class="fw-bold mb-3">Categories</h5>
+      <div class="list-group shadow-sm">
+        <a href="{% url 'store:product_list' %}" 
+           class="list-group-item list-group-item-action {% if not selected_category %}active{% endif %}">
+           সব প্রোডাক্ট
+        </a>
+        
+        {% for cat in categories %}
+          <a href="?category={{ cat.slug }}{% if selected_sort %}&sort={{ selected_sort }}{% endif %}" 
+             class="list-group-item list-group-item-action {% if selected_category == cat.slug %}active{% endif %}">
+             {{ cat.name }}
+          </a>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- প্রোডাক্ট লিস্ট, সোর্টিং এবং পেজিনেশন এলাকা -->
+    <div class="col-md-9">
+      
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="h4 m-0 fw-bold">প্রোডাক্ট তালিকা</h2>
+        
+        <!-- প্রাইস সোর্টিং ড্রপডাউন -->
+        <form method="GET" class="d-flex align-items-center">
+          {% if selected_category %}
+            <input type="hidden" name="category" value="{{ selected_category }}">
+          {% endif %}
+          
+          <select name="sort" class="form-select form-select-sm shadow-sm" onchange="this.form.submit()">
+            <option value="">সাজান (ডিফল্ট)</option>
+            <option value="low_to_high" {% if selected_sort == 'low_to_high' %}selected{% endif %}>দাম: কম থেকে বেশি</option>
+            <option value="high_to_low" {% if selected_sort == 'high_to_low' %}selected{% endif %}>দাম: বেশি থেকে কম</option>
+          </select>
+        </form>
+      </div>
+
+      <!-- প্রোডাক্ট কার্ড গ্রিড -->
+      <div class="row">
+        {% for product in products %}
+          <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+              {% if product.image %}
+                <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.title }}">
+              {% else %}
+                <img src="https://via.placeholder.com/300x200" class="card-img-top" alt="No Image">
+              {% endif %}
+              <div class="card-body">
+                <h5 class="card-title">{{ product.title }}</h5>
+                <p class="card-text">মূল্য: ৳{{ product.price }}</p>
+                <p class="card-text"><small class="text-muted">বিক্রেতা: {{ product.seller.username }}</small></p>
+                <a href="{% url 'store:product_detail' product.pk %}" class="btn btn-outline-primary btn-sm">ভিউ ডিটেইলস</a>
+              </div>
+            </div>
+          </div>
+        {% empty %}
+          <div class="col-12">
+            <div class="alert alert-info text-center">
+              কোনো প্রোডাক্ট পাওয়া যায়নি।
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+
+      <!-- পেজিনেশন নেভিগেশন (Pagination Controls) -->
+      {% if products.has_other_pages %}
+      <nav class="mt-4">
+        <ul class="pagination justify-content-center">
+
+          <!-- Previous Button -->
+          {% if products.has_previous %}
+            <li class="page-item">
+              <a class="page-link" href="?page={{ products.previous_page_number }}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if selected_sort %}&sort={{ selected_sort }}{% endif %}">Previous</a>
+            </li>
+          {% else %}
+            <li class="page-item disabled"><span class="page-link">Previous</span></li>
+          {% endif %}
+
+          <!-- Page Numbers -->
+          {% for i in products.paginator.page_range %}
+            {% if products.number == i %}
+              <li class="page-item active"><span class="page-link">{{ i }}</span></li>
+            {% else %}
+              <li class="page-item">
+                <a class="page-link" href="?page={{ i }}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if selected_sort %}&sort={{ selected_sort }}{% endif %}">{{ i }}</a>
+              </li>
+            {% endif %}
+          {% endfor %}
+
+          <!-- Next Button -->
+          {% if products.has_next %}
+            <li class="page-item">
+              <a class="page-link" href="?page={{ products.next_page_number }}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if selected_sort %}&sort={{ selected_sort }}{% endif %}">Next</a>
+            </li>
+          {% else %}
+            <li class="page-item disabled"><span class="page-link">Next</span></li>
+          {% endif %}
+
+        </ul>
+      </nav>
+      {% endif %}
+
+    </div>
+  </div>
+</div>
+{% endblock %}

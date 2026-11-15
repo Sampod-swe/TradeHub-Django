@@ -1,0 +1,26 @@
+{% extends 'store/base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <div class="card shadow-sm p-4 text-center">
+            <h3 class="mb-2">OTP ভেরিফিকেশন</h3>
+            <p class="text-muted small">আপনার ইমেইলে পাঠানো ৬ ডিজিটের OTP কোডটি লিখুন</p>
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-danger p-2 small">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+
+            <form method="POST">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <input type="text" name="otp" class="form-control text-center fs-4" placeholder="------" maxlength="6" required>
+                </div>
+                <button type="submit" class="btn btn-success w-100 fw-bold">ভেরিফাই ও অ্যাকাউন্ট তৈরি করুন</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

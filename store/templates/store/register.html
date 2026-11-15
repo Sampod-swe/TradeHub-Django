@@ -1,0 +1,41 @@
+{% extends 'store/base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <div class="card shadow-sm p-4">
+            <h3 class="mb-4 text-center">সাইন-আপ করুন</h3>
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-danger p-2 small text-center">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+
+            <form method="POST">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label class="form-label">ইউজারনেম</label>
+                    <input type="text" name="username" class="form-control" placeholder="ইউজারনেম দিন" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">ইমেইল</label>
+                    <input type="email" name="email" class="form-control" placeholder="ইমেইল দিন" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">পাসওয়ার্ড</label>
+                    <input type="password" name="password" class="form-control" placeholder="পাসওয়ার্ড দিন" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Account-er Dhoron</label>
+                    <select name="role" class="form-select" required>
+                    <option value="buyer">Buyer (Kreta)</option>
+                    <option value="seller">Seller (Bikreta)</option>
+                    </select>
+                    </div>
+                <button type="submit" class="btn btn-primary w-100 fw-bold">OTP পাঠান</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

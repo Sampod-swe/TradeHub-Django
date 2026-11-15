@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TradeHub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- নেভিগেশন বার -->
+    <nav class="navbar navbar-expand-lg bg-primary text-white px-4 d-flex justify-content-between align-items-center mb-4">
+        <a class="navbar-brand text-white fw-bold" href="{% url 'store:product_list' %}">TradeHub</a>
+
+        <!-- সার্চ বার -->
+        <form action="{% url 'store:product_search' %}" method="GET" class="d-flex me-auto ms-4" style="max-width: 300px;">
+            <input type="text" name="q" value="{{ query|default:'' }}" placeholder="Search products..." class="form-control me-2" required>
+            <button type="submit" class="btn btn-light text-primary">Search</button>
+        </form>
+
+        <div class="d-flex align-items-center gap-2">
+            {% if request.user.is_authenticated %}
+                <!-- নোটিফিকেশন আইকন (শুধু লগইন থাকলেই দেখাবে) -->
+                <a href="{% url 'store:notification_list' %}" class="btn btn-outline-light position-relative me-2">
+                    🔔
+                    {% if unread_count > 0 %}
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                            {{ unread_count }}
+                        </span>
+                    {% endif %}
+                </a>
+
+                <span>হ্যালো, {{ request.user.username }}</span>
+                <a href="{% url 'store:product_add' %}" class="btn btn-light ms-2">+ প্রোডাক্ট আপলোড</a>
+                <a href="{% url 'store:dashboard' %}" class="btn btn-outline-light">👤</a>
+                <a href="{% url 'store:logout' %}" class="btn btn-outline-light">লগআউট</a>
+            {% else %}
+                <a href="{% url 'store:login' %}" class="btn btn-light">লগইন</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <!-- মূল পেজের কনটেন্ট -->
+    <div class="container">
+        {% block content %}
+        {% endblock %}
+    </div>
+</body>
+</html>

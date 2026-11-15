@@ -1,0 +1,33 @@
+{% load static %}  <!-- # ড্যাঙ্গোতে ইমেজ প্রসেস করার জন্য সবার ওপরে থাকবে -->
+
+<!-- # নতুন: পেমেন্ট মেথড সিলেক্ট করার ফর্ম -->
+<form method="POST" action="{% url 'store:initiate_payment' product.id %}">
+    {% csrf_token %}
+    <h3>পেমেন্টের মাধ্যম নির্বাচন করুন:</h3><br>
+
+    <!-- # নতুন: ১. বিকাশ পেমেন্ট অপশন -->
+    <label style="cursor: pointer; display: flex; align-items: center; gap: 10px;">
+        <input type="radio" name="payment_method" value="bkash" checked>
+        <img src="{% static 'images/bkash_logo.png' %}" alt="bKash" width="50">
+        <b>বিকাশ (bKash)</b>
+    </label><br>
+
+    <!-- # নতুন: ২. নগদ পেমেন্ট অপশন -->
+    <label style="cursor: pointer; display: flex; align-items: center; gap: 10px;">
+        <input type="radio" name="payment_method" value="nagad">
+        <img src="{% static 'images/nagad_logo.png' %}" alt="Nagad" width="50">
+        <b>নগদ (Nagad)</b>
+    </label><br>
+
+    <!-- # নতুন: ৩. কার্ড বা SSLCommerz পেমেন্ট অপশন -->
+    <label style="cursor: pointer; display: flex; align-items: center; gap: 10px;">
+        <input type="radio" name="payment_method" value="sslcommerz">
+        <img src="{% static 'images/cards_logo.png' %}" alt="SSLCommerz" width="90">
+        <b>ভিসা / মাস্টারকার্ড / অন্যান্য (SSLCommerz)</b>
+    </label><br><br>
+
+    <!-- # নতুন: পেমেন্ট সাবমিট বাটন -->
+    <button type="submit" class="btn btn-primary">
+        টাকা জমা দিন (Tk {{ order.total_amount }})
+    </button>
+</form>
